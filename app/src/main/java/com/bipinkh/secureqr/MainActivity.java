@@ -1,6 +1,5 @@
 package com.bipinkh.secureqr;
 
-import android.Manifest;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -123,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
                     .create()
                     .show();
         }
-    
+
 
     @Override
     public void handleResult(Result result) {

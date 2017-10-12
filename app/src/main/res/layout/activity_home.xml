@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linearLayout1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Secure QR"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <!--todo-->
+    <!--make the encryption-decryption function-->
+    <!--make the string read-write-->
+    <!--make the user input string-->
+    <!--make qr url-->
+    <!--send qr-->
+    <!--spinners for options-->
+    <!--make the encode-decode function-->
+
+
+    <Button
+        android:id="@+id/nextbutton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Click here to scan" />
+
+</LinearLayout>
