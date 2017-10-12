@@ -23,9 +23,20 @@
 
 
     <Button
-        android:id="@+id/nextbutton"
+        android:id="@+id/readQR"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="Click here to scan" />
+
+
+    <Button
+        android:id = "@+id/writeQR"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Write QR" />
+
+
+
+
 
 </LinearLayout>
