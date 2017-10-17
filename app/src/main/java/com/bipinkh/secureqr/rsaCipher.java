@@ -26,16 +26,16 @@ public class rsaCipher {
     {
         Cipher cipher = Cipher.getInstance("RSA");
         cipher.init(Cipher.ENCRYPT_MODE, publicKey);
-        byte[] encryptedKey = cipher.doFinal(message.getBytes());
-        return encryptedKey;
+        byte[] enc = cipher.doFinal(message.getBytes());
+        return enc;
     }
 
-    public static byte[] decryption(byte[] encryptedKey, PrivateKey privateKey) throws Exception
+    public static String decryption(byte[] encryptedKey, PrivateKey privateKey) throws Exception
     {
         Cipher cipher = Cipher.getInstance("RSA");
         cipher.init(Cipher.DECRYPT_MODE, privateKey);
-        byte[] symmetricKey = cipher.doFinal(encryptedKey);
-        return symmetricKey;
+        byte[] dec = cipher.doFinal(encryptedKey);
+        return new String(dec);
     }
 
 }

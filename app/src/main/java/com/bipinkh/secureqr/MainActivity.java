@@ -1,6 +1,8 @@
 package com.bipinkh.secureqr;
 
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
@@ -127,22 +129,31 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
     @Override
     public void handleResult(Result result) {
         String scanresult = result.getText();
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Scan Result");
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                scannerView.resumeCameraPreview(MainActivity.this);
-            }
-        });
-        builder.setNeutralButton("Save this to list", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(MainActivity.this, "Decode this", Toast.LENGTH_LONG).show();
-            }
-        });
-        builder.setMessage(scanresult);
-        AlertDialog alert = builder.create();
-        alert.show();
+
+        final Context context = MainActivity.this;
+        Intent intent = new Intent(context, ScanActivity.class);
+        Bundle bundle = new Bundle();
+
+        bundle.putString("scanresult", scanresult);
+        intent.putExtras(bundle);
+        startActivity(intent);
+
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        builder.setTitle("Scan Result");
+//        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                scannerView.resumeCameraPreview(MainActivity.this);
+//            }
+//        });
+//        builder.setNeutralButton("Save this to list", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                Toast.makeText(MainActivity.this, "Decode this", Toast.LENGTH_LONG).show();
+//            }
+//        });
+//        builder.setMessage(scanresult);
+//        AlertDialog alert = builder.create();
+//        alert.show();
     }
 }

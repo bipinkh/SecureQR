@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
@@ -26,8 +27,12 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 
+import java.security.KeyPair;
+import java.security.NoSuchAlgorithmException;
+
 import static android.R.attr.width;
 import static android.R.id.input;
+import static com.bipinkh.secureqr.R.attr.dialogPreferredPadding;
 import static com.bipinkh.secureqr.R.attr.height;
 
 /**
@@ -41,6 +46,7 @@ public class HomeActivity extends Activity{
     String cipher = "AES";
     String mode = "CBC";
     String padding = "PKCS5PADDING";
+    String password = "1234567890123456";
 
     Button readButton, writeButton;
     private String textToEncrypt = "dummy data";
@@ -53,7 +59,13 @@ public class HomeActivity extends Activity{
         addListenerOnReadButton(); //scan qr button
         addListenerOnWriteButton(); //make qr button
         addListenerOnCipherButton(); //configure cipher
+        addListenerOnGenerator(); //generate key pair
 
+    }
+
+    private void addListenerOnGenerator() {
+
+    Toast.makeText(this, "New set of key pair generated", Toast.LENGTH_SHORT).show();
     }
 
     public void addListenerOnReadButton()
@@ -75,95 +87,11 @@ public class HomeActivity extends Activity{
         cipherButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                configureCipher();
+                cipher = "RSA";
+//                configureCipher();
             }
         });
     }
-
-    public void configureCipher(){
-
-        ArrayAdapter<String> adapter1, adapter2, adapter3 =null;
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Configure");
-
-        LinearLayout layout = new LinearLayout(this);
-        layout.setOrientation(LinearLayout.VERTICAL);
-
-        //spinenr for cipher
-            Spinner dropdown1 = new Spinner(this);
-            String[] items = new String[]{"DES", "AES", "RSA"};
-            adapter1 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, items);
-            adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            dropdown1.setAdapter(adapter1);
-            dropdown1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    cipher = parent.getItemAtPosition(position).toString();
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-                    cipher=parent.getItemAtPosition(0).toString();
-                }
-            });
-
-        //spinenr for mode
-            Spinner dropdown2 = new Spinner(this);
-            String[] modes = new String[]{"CBC", "ECB", "CTR"};
-            adapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, modes);
-            adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            dropdown2.setAdapter(adapter2);
-            dropdown2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    mode = parent.getItemAtPosition(position).toString();
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-                    mode=parent.getItemAtPosition(0).toString();
-                }
-            });
-
-        //spinenr for padding
-            Spinner dropdown3 = new Spinner(this);
-            String[] paddings = new String[]{"PKCS1PADDING", "PKCS2PADDING", "PKCS5PADDING", "NoPadding"};
-            adapter3 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, paddings);
-            adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            dropdown3.setAdapter(adapter3);
-            dropdown3.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    padding = parent.getItemAtPosition(position).toString();
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-                    padding=parent.getItemAtPosition(0).toString();
-                }
-            });
-
-        layout.addView(dropdown1);
-        layout.addView(dropdown2);
-        layout.addView(dropdown3);
-        builder.setView(layout);
-        // Set up the buttons
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                    Toast.makeText(HomeActivity.this, "Cipher : "+cipher+"/"+mode+"/"+padding, Toast.LENGTH_SHORT).show();
-            }
-        });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-        builder.show();
-    }
-
 
     private void addListenerOnWriteButton() {
         writeButton = (Button) findViewById(R.id.writeQR);
@@ -175,14 +103,12 @@ public class HomeActivity extends Activity{
         });
     }
 
-
     public void askForString(){
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Enter String");
 
         final EditText input = new EditText(this);
-        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         builder.setView(input);
 
@@ -190,20 +116,15 @@ public class HomeActivity extends Activity{
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                textToEncrypt = input.getText().toString();
-                if (textToEncrypt != null)
-                {
-                    try{
-                        Bitmap bmQR = generateQR(1000,1000);
-                        displayQR(bmQR);
-
-                    }
-                    catch (Exception e){
-                        Toast.makeText(HomeActivity.this, "Making QR Failed", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        });
+                final Context context = HomeActivity.this;
+                Intent intent = new Intent(context, DisplayActivity.class);
+                Bundle bundle = new Bundle();
+                String text = "qr://"+input.getText().toString();
+                bundle.putString("text", text);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }}
+        );
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -213,41 +134,102 @@ public class HomeActivity extends Activity{
         builder.show();
     }
 
-    public Bitmap generateQR(int wdth, int hght)
-    {
-        QRCodeWriter writer = new QRCodeWriter();
-        BitMatrix matrix = null;
-        try {
-            matrix = writer.encode(textToEncrypt, BarcodeFormat.QR_CODE, 1000, 1000);
-        }
-        catch (WriterException ex) {
-            ex.printStackTrace();
-        }
-        Bitmap bmp = Bitmap.createBitmap(wdth, hght, Bitmap.Config.RGB_565);
-        for (int x = 0; x < wdth; x++){
-            for (int y = 0; y < hght; y++){
-                bmp.setPixel(x, y, matrix.get(x,y) ? Color.BLACK : Color.WHITE);
-            }
-        }
-        return bmp;
-    }
-
-    public void displayQR(Bitmap bmQR){
-
-        AlertDialog.Builder ImageDialog = new AlertDialog.Builder(this);
-        ImageDialog.setTitle("QR");
-        ImageView showImage = new ImageView(this);
-        showImage.setImageBitmap(bmQR);
-        ImageDialog.setView(showImage);
-
-        ImageDialog.setNegativeButton("Close", new DialogInterface.OnClickListener()
-        {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-        ImageDialog.show();
-    }
+//    public void configureCipher(){
+//
+//        ArrayAdapter<String> adapter1, adapter2, adapter3 =null;
+//
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        builder.setTitle("Configure");
+//
+//        LinearLayout layout = new LinearLayout(this);
+//        layout.setOrientation(LinearLayout.VERTICAL);
+//
+//        //spinner for cipher
+//        Spinner dropdown1 = new Spinner(this);
+//        String[] items = new String[]{"AES", "RSA"};
+//        adapter1 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, items);
+//        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        dropdown1.setAdapter(adapter1);
+//        dropdown1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                cipher = parent.getItemAtPosition(position).toString();
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//                cipher=parent.getItemAtPosition(0).toString();
+//            }
+//        });
+//
+//        //spinner for mode
+//        Spinner dropdown2 = new Spinner(this);
+//        String[] modes = new String[]{"CBC", "ECB", "CTR"};
+//        adapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, modes);
+//        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        dropdown2.setAdapter(adapter2);
+//        dropdown2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                mode = parent.getItemAtPosition(position).toString();
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//                mode=parent.getItemAtPosition(0).toString();
+//            }
+//        });
+//
+//        //spinner for padding
+//        Spinner dropdown3 = new Spinner(this);
+//        String[] paddings = new String[]{"PKCS1PADDING", "PKCS2PADDING", "PKCS5PADDING", "NoPadding"};
+//        adapter3 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, paddings);
+//        adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        dropdown3.setAdapter(adapter3);
+//        dropdown3.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                padding = parent.getItemAtPosition(position).toString();
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//                padding=parent.getItemAtPosition(0).toString();
+//            }
+//        });
+//
+//        //textfield for password
+//        final EditText passwordField = new EditText(this);
+//        passwordField.setHint("Password(16 character)");
+//        passwordField.setInputType(InputType.TYPE_CLASS_TEXT);
+//
+//        layout.addView(dropdown1);
+//        layout.addView(dropdown2);
+//        layout.addView(dropdown3);
+//        layout.addView(passwordField);
+//        builder.setView(layout);
+//
+//        // Set up the buttons
+//        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                if (passwordField.getText().toString().length()==16 ){
+//                    password = passwordField.getText().toString();
+//                }
+//                else{
+//                    Toast.makeText(HomeActivity.this, "Error :: Password must be 16 characters\n.Default password used",
+//                            Toast.LENGTH_SHORT).show();
+//                }
+//                String algorithm = cipher+"/"+mode+"/"+padding;
+//                Toast.makeText(HomeActivity.this, "Cipher : "+algorithm, Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                dialog.cancel();
+//            }
+//        });
+//        builder.show();
+//    }
 }
