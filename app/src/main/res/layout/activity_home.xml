@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/linearLayout1"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -10,7 +12,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Secure QR"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+        tools:layout_editor_absoluteX="89dp"
+        tools:layout_editor_absoluteY="16dp" />
 
     <!--todo-->
     <!--make the encryption-decryption function-->
@@ -24,19 +28,39 @@
 
     <Button
         android:id="@+id/readQR"
-        android:layout_width="fill_parent"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Click here to scan" />
+        android:text="Click here to scan"
+        tools:layout_editor_absoluteX="111dp"
+        tools:layout_editor_absoluteY="105dp" />
 
 
     <Button
-        android:id = "@+id/writeQR"
-        android:layout_width="fill_parent"
+        android:id="@+id/writeQR"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Write QR" />
+        android:elevation="0dp"
+        android:text="Write string as QR"
+        tools:layout_editor_absoluteX="111dp"
+        tools:layout_editor_absoluteY="178dp" />
 
+    <Button
+        android:id="@+id/makeCipher"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Configure Cipher"
+        tools:layout_editor_absoluteX="116dp"
+        tools:layout_editor_absoluteY="253dp" />
 
-
+    <!--<Spinner-->
+        <!--android:id="@+id/spinner1"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="@android:drawable/btn_dropdown"-->
+        <!--android:spinnerMode="dropdown" />-->
 
 
 </LinearLayout>
