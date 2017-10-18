@@ -6,9 +6,11 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Environment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -26,8 +28,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.security.KeyFactory;
 import java.security.KeyPair;
+import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Date;
 
 import static android.R.attr.bitmap;
@@ -50,6 +55,7 @@ public class DisplayActivity extends AppCompatActivity {
         }
     }
 
+    //share public key
     private void setsharekeyButtonListener() {
         Button btn = (Button) findViewById(R.id.sharekeyButton);
         btn.setOnClickListener(new View.OnClickListener(){
@@ -66,6 +72,7 @@ public class DisplayActivity extends AppCompatActivity {
         });
     }
 
+    //share image
     private void setShareListener() throws Exception{
         final Context context = this;
         Button shareButton = (Button) findViewById(R.id.shareButton);
@@ -88,26 +95,23 @@ public class DisplayActivity extends AppCompatActivity {
     public void operationEncoding(){
         Bundle bundle = getIntent().getExtras();
         String text = bundle.getString("text");
-        if (text.length() !=0 )
-        {
+        Log.d("datsun", "text length"+String.valueOf(text.length()) );
             try {
                 String Algorithm = "rsa";
-                String Encryptedtext = processing.encryption(text, HomeActivity.getDefaultPublicKey());
-                try{
-                    Bitmap bmQR = generateQR(1000,1000, Encryptedtext);
-                    displayQR(bmQR, Algorithm, text);
-                }
-                catch (Exception e){
-                    Toast.makeText(DisplayActivity.this, "Error Writing QR", Toast.LENGTH_SHORT).show();
-                }
+                PublicKey pk = HomeActivity.getDefaultPublicKey();
+                    String Encryptedtext = processing.encryption(text, pk);
+                    try{
+                        Bitmap bmQR = generateQR(1000,1000, Encryptedtext);
+                        displayQR(bmQR, Algorithm, text);
+                    }
+                    catch (Exception e){
+                        Toast.makeText(DisplayActivity.this, "Error Writing QR", Toast.LENGTH_SHORT).show();
+                    }
+
             }
             catch (Exception e){
                 Toast.makeText(DisplayActivity.this, "Error in Encryption", Toast.LENGTH_SHORT).show();
             }
-        }
-        else{
-            Toast.makeText(DisplayActivity.this, "Insert some text", Toast.LENGTH_SHORT).show();
-        }
     }
 
     public Bitmap generateQR(int wdth, int hght, String message)
@@ -135,7 +139,7 @@ public class DisplayActivity extends AppCompatActivity {
         TextView qrDescription = (TextView) findViewById(R.id.qrDescription);
         qrImage.setPaddingRelative(5,5,5,5);
         qrImage.setImageBitmap(bmQR);
-        qrDescription.setText(":::Original Message:::\n"+Text+"\n\n:::Algorithm Used:::\n"+ algorithm);
+        qrDescription.setText("\n:::Original Message:::\n"+Text.substring(5)+"\n\n:::Algorithm Used:::\n"+ algorithm);
     }
 
 }

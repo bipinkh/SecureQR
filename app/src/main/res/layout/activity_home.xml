@@ -11,12 +11,12 @@
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Secure QR"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
-        tools:layout_editor_absoluteX="89dp"
-        tools:layout_editor_absoluteY="16dp"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:text="Secure QR"
+        android:textAppearance="@android:style/TextAppearance.Material.Display2"
+        tools:layout_editor_absoluteX="89dp"
+        tools:layout_editor_absoluteY="16dp" />
 
     <!--todo-->
     <!--make the user input string-->
@@ -68,7 +68,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignTop="@+id/generate"
-        android:text="Share KeyPair"
+        android:text="Share PublicKey"
         tools:layout_editor_absoluteX="245dp"
         tools:layout_editor_absoluteY="442dp" />
 

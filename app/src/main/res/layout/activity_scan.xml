@@ -13,41 +13,74 @@
         android:layout_width="118dp"
         android:layout_height="32dp"
         android:text="QR Scan Result:"
+        android:textColor="@android:color/holo_red_dark"
+        android:textSize="15dp"
         tools:layout_editor_absoluteX="133dp"
         tools:layout_editor_absoluteY="0dp" />
 
     <ScrollView
         android:id="@+id/scanScroller"
         android:layout_width="match_parent"
-        android:layout_height="183dp"
+        android:layout_height="182dp"
         android:layout_marginLeft="5dp"
         app:layout_constraintLeft_toLeftOf="parent"
         tools:layout_editor_absoluteY="50dp">
+
         <TextView
+            android:id="@+id/scanResultText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/scanResultText"/>
+            android:textSize="13dp" />
     </ScrollView>
 
-    <Button
-        android:id="@+id/decodeANDdecrypt"
+    <TextView
+        android:id="@+id/decryptTopText"
+        android:layout_width="118dp"
+        android:layout_height="32dp"
+        android:textColor="@android:color/holo_red_dark"
+        android:textSize="15dp"
+        tools:layout_editor_absoluteX="133dp"
+        tools:layout_editor_absoluteY="50dp" />
+
+    <ScrollView
+        android:id="@+id/decryptedScroller"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        tools:layout_editor_absoluteY="83dp">
+
+        <TextView
+            android:id="@+id/decryptResulttext"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="13dp" />
+    </ScrollView>
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Decode (default key)"
-        tools:layout_editor_absoluteX="115dp"
-        tools:layout_editor_absoluteY="261dp"
-        />
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/decodeWithDifferent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Decrypt (different key)"
-        tools:layout_editor_absoluteX="115dp"
-        tools:layout_editor_absoluteY="291dp"
-        />
+        <Button
+            android:id="@+id/decodeWithOwn"
+            style="@android:style/Widget.Button.Inset"
+            android:layout_width="175dp"
+            android:layout_height="wrap_content"
+            android:text="Decrypt (own private key)"
+            tools:layout_editor_absoluteX="115dp"
+            tools:layout_editor_absoluteY="261dp" />
 
-
+        <Button
+            android:id="@+id/decodeWithDifferent"
+            style="@android:style/Widget.Button.Inset"
+            android:layout_width="175dp"
+            android:layout_height="wrap_content"
+            android:text="Decrypt (different key)"
+            tools:layout_editor_absoluteX="115dp"
+            tools:layout_editor_absoluteY="291dp"
+            />
+    </LinearLayout>
 
 
 </LinearLayout>

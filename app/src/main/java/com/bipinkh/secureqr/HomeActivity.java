@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Base64;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,6 +66,7 @@ public class HomeActivity extends Activity {
         Log.d("datsun", "Public Key::\n" + defaultPublicKey + "\n\n");
 
         if (defaultPrivateKey == null || defaultPublicKey == null) {
+            Toast.makeText(this, "No stored keypair found. Generated new key pair to use.", Toast.LENGTH_LONG).show();
             KeyPair kp = null;
             try {
                 kp = rsaCipher.generateKeyPair(2048);
@@ -160,26 +163,59 @@ public class HomeActivity extends Activity {
     public void askForString() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Enter String");
+        builder.setTitle("Enter messages to encrypt");
 
-        final EditText input = new EditText(this);
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
-        builder.setView(input);
+        //layout
+            LinearLayout layout = new LinearLayout(this);
+            layout.setOrientation(LinearLayout.VERTICAL);
+
+//            final TextView tv = new TextView(this);
+//            tv.setText("Enter your text lines to encrypt");
+//            tv.setTextColor(Color.parseColor("#ff0000"));
+//            tv.setTextSize(20);
+
+            final EditText input = new EditText(this);
+            input.setLines(3);
+            input.setHint("(Message here)");
+            input.setInputType(InputType.TYPE_CLASS_TEXT);
+            builder.setView(input);
+
+//            final TextView tv2 = new TextView(this);
+//            tv2.setTextSize(20);
+//            tv2.setText("Enter Base64 encoded PublicKey");
+//            tv2.setTextColor(Color.parseColor("#ff0000"));
+//
+//            final EditText publicKeyinput = new EditText(this);
+//            publicKeyinput.setHint("(Leave blank to use own public key)");
+
+
+//            layout.addView(tv2);
+//            layout.addView(publicKeyinput);
+//            layout.addView(tv);
+            layout.addView(input);
+            builder.setView(layout);
 
         // Set up the buttons
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        final Context context = HomeActivity.this;
-                        Intent intent = new Intent(context, DisplayActivity.class);
-                        Bundle bundle = new Bundle();
-                        String text = "qr://" + input.getText().toString();
-                        bundle.putString("text", text);
-                        intent.putExtras(bundle);
-                        startActivity(intent);
+                        if (input.getText().toString().length() > 0){
+                            final Context context = HomeActivity.this;
+                            Intent intent = new Intent(context, DisplayActivity.class);
+                            Bundle bundle = new Bundle();
+                            String text = "qr://" + input.getText().toString();
+                            bundle.putString("text", text);
+                            intent.putExtras(bundle);
+                            startActivity(intent);
+                        }
+                        else{
+                            Toast.makeText(HomeActivity.this, "Insert Some Text", LENGTH_SHORT).show();
+                        }
+
                     }
                 }
         );
+
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
