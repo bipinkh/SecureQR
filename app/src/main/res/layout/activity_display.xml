@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,21 +7,36 @@
     tools:context="com.bipinkh.secureqr.DisplayActivity"
     android:orientation="vertical">
 
+
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/qrImage"/>
+        android:id="@+id/qrImage"
+        />
 
-    <ScrollView
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/shareButton"
+        style="@android:style/Widget.Button.Inset"
+        android:layout_width="173dp"
         android:layout_height="wrap_content"
-        android:id="@+id/encryptedText">
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/qrImage"
+        android:layout_toLeftOf="@+id/sharekeyButton"
+        android:text="Share Image" />
+
+    <Button
+        android:id="@+id/sharekeyButton"
+        style="@android:style/Widget.Button.Inset"
+        android:layout_width="204dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/qrImage"
+        android:text="Share Public Key" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/qrDescription" />
+        android:id="@+id/qrDescription"
+        android:layout_below="@id/shareButton"/>
 
-    </ScrollView>
-
-</LinearLayout>
+</RelativeLayout>

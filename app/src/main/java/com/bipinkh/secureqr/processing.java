@@ -1,33 +1,57 @@
 package com.bipinkh.secureqr;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
 import java.security.Key;
+import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.RSAPrivateKeySpec;
+import java.security.spec.X509EncodedKeySpec;
+
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 /**
  * Created by bipin on 10/17/2017.
  */
 
 public class processing {
-    static KeyPair keypair = null;
-
-    public static KeyPair getKeypair(){
-        if (keypair==null){
-            try {
-                keypair = rsaCipher.generateKeyPair(2048);
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            }
-        }
-        return keypair;
-    }
-
+//    public static KeyPair GLOBALkeypair = null;
+//    public static PublicKey GLOBALpublic = null;
+//    public static PrivateKey GlOBALprivate = null;
+//
+//    public static void getKeypair(){
+//        if (GLOBALkeypair == null){
+//            try {
+//                GLOBALkeypair = rsaCipher.generateKeyPair(2048);
+//                GLOBALpublic = GLOBALkeypair.getPublic();
+//                GlOBALprivate = GLOBALkeypair.getPrivate();
+//            } catch (NoSuchAlgorithmException e) {
+//                e.printStackTrace();
+//            }}
+//    }
+//
+//    public static PrivateKey getPrivate(){
+//        getKeypair();
+//        return GLOBALkeypair.getPrivate();
+//    }
+//
+//    public static PublicKey getPublic(){
+//        getKeypair();
+//        return GLOBALkeypair.getPublic();
+//    }
 
     public static String encryption(String message, PublicKey pubkey){
         int ivSize = 16;

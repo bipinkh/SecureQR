@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.bipinkh.secureqr.ScanActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:weightSum="1">
 
     <TextView
         android:id="@+id/scanTopText"
@@ -17,7 +18,7 @@
 
     <ScrollView
         android:id="@+id/scanScroller"
-        android:layout_width="375dp"
+        android:layout_width="match_parent"
         android:layout_height="183dp"
         android:layout_marginLeft="5dp"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -32,9 +33,18 @@
         android:id="@+id/decodeANDdecrypt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Decode and Decrypt"
+        android:text="Decode (default key)"
         tools:layout_editor_absoluteX="115dp"
         tools:layout_editor_absoluteY="261dp"
+        />
+
+    <Button
+        android:id="@+id/decodeWithDifferent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Decrypt (different key)"
+        tools:layout_editor_absoluteX="115dp"
+        tools:layout_editor_absoluteY="291dp"
         />
 
 

@@ -1,39 +1,32 @@
 package com.bipinkh.secureqr;
+import android.content.SharedPreferences;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.media.Image;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.text.InputType;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.WriterException;
-import com.google.zxing.common.BitMatrix;
-import com.google.zxing.qrcode.QRCodeWriter;
 
+import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 
-import static android.R.attr.width;
-import static android.R.id.input;
-import static com.bipinkh.secureqr.R.attr.dialogPreferredPadding;
-import static com.bipinkh.secureqr.R.attr.height;
+import static android.widget.Toast.LENGTH_SHORT;
 
 /**
  * Created by bipin on 10/12/2017.
@@ -41,16 +34,10 @@ import static com.bipinkh.secureqr.R.attr.height;
 
 
 
-public class HomeActivity extends Activity{
+public class HomeActivity extends Activity {
 
-    String cipher = "AES";
-    String mode = "CBC";
-    String padding = "PKCS5PADDING";
-    String password = "1234567890123456";
-
-    Button readButton, writeButton;
-    private String textToEncrypt = "dummy data";
-
+    public static PrivateKey defaultPrivateKey = null;
+    public static PublicKey defaultPublicKey = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,20 +45,99 @@ public class HomeActivity extends Activity{
         setContentView(R.layout.activity_home);
         addListenerOnReadButton(); //scan qr button
         addListenerOnWriteButton(); //make qr button
-        addListenerOnCipherButton(); //configure cipher
+//        addListenerOnCipherButton(); //configure cipher
         addListenerOnGenerator(); //generate key pair
+        addListenerOnSharePublicKey(); //save current keypair
+        try {
+            loaddefault();
+        } catch (Exception e) {
+            Toast.makeText(this, "Cannot load default key", LENGTH_SHORT).show();
+        }
+    }
 
+    public void loaddefault() throws NoSuchAlgorithmException, InvalidKeySpecException {
+        String defaultPrivateKeyString, defaultPublicKeyString;
+        SharedPreferences settings = getSharedPreferences("private_public_keys", 0);
+        defaultPrivateKeyString = settings.getString("defaultPrivateKey", null);
+        defaultPublicKeyString = settings.getString("defaultPublicKey", null);
+        Log.d("datsun", "Private Key::\n" + defaultPrivateKey + "\n\n");
+        Log.d("datsun", "Public Key::\n" + defaultPublicKey + "\n\n");
+
+        if (defaultPrivateKey == null || defaultPublicKey == null) {
+            KeyPair kp = null;
+            try {
+                kp = rsaCipher.generateKeyPair(2048);
+            } catch (NoSuchAlgorithmException e) {
+                Toast.makeText(this, "Failed to generate key pair", LENGTH_SHORT).show();
+            }
+            defaultPrivateKey = kp.getPrivate();
+            defaultPublicKey = kp.getPublic();
+        } else {
+            KeyFactory kf = KeyFactory.getInstance("RSA");
+            byte[] encodedPv = Base64.decode(defaultPrivateKeyString, Base64.DEFAULT);
+            PKCS8EncodedKeySpec keySpecPv = new PKCS8EncodedKeySpec(encodedPv);
+            defaultPrivateKey = kf.generatePrivate(keySpecPv);
+
+            byte[] encodedPb = Base64.decode(defaultPublicKeyString, Base64.DEFAULT);
+            X509EncodedKeySpec keySpecPb = new X509EncodedKeySpec(encodedPb);
+            defaultPublicKey = kf.generatePublic(keySpecPb);
+
+            Log.d("datsun", "retrieved prkey :\n" + defaultPrivateKey.toString());
+            Log.d("datsun", "retrieved pbkey :\n" + defaultPublicKey.toString());
+        }
+    }
+
+    public void setdefault(KeyPair kp) {
+        String privateKey = new String(Base64.encode(kp.getPrivate().getEncoded(), Base64.DEFAULT));
+        String publicKey = new String(Base64.encode(kp.getPublic().getEncoded(), Base64.DEFAULT));
+        SharedPreferences settings = getSharedPreferences("private_public_keys", 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("defaultPrivateKey", privateKey);
+        editor.putString("defaultPublicKey", publicKey);
+        editor.commit();
+        Toast.makeText(this, "Default Key Pair saved. You can share your Public Key to others.", Toast.LENGTH_LONG).show();
     }
 
     private void addListenerOnGenerator() {
 
-    Toast.makeText(this, "New set of key pair generated", Toast.LENGTH_SHORT).show();
+        Button btn = (Button) findViewById(R.id.generate);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    final KeyPair genKeys = rsaCipher.generateKeyPair(2048);
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
+                    builder.setTitle("Make Default");
+                    builder.setMessage(" Generation Successful. Make it default ?");
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            setdefault(genKeys);
+                        }
+                    });
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            }
+                    );
+                    AlertDialog alert = builder.create();
+                    alert.show();
+
+                } catch (NoSuchAlgorithmException e) {
+                    Log.d("datsun", "Generating Failed");
+                    e.printStackTrace();
+                }
+
+            }
+        });
     }
 
-    public void addListenerOnReadButton()
-    {
+    public void addListenerOnReadButton() {
         final Context context = this;
-        readButton = (Button) findViewById(R.id.readQR);
+        Button readButton = (Button) findViewById(R.id.readQR);
         readButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,20 +147,8 @@ public class HomeActivity extends Activity{
         });
     }
 
-    private void addListenerOnCipherButton(){
-        Button cipherButton;
-        cipherButton = (Button) findViewById(R.id.makeCipher);
-        cipherButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                cipher = "RSA";
-//                configureCipher();
-            }
-        });
-    }
-
     private void addListenerOnWriteButton() {
-        writeButton = (Button) findViewById(R.id.writeQR);
+        Button writeButton = (Button) findViewById(R.id.writeQR);
         writeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,7 +157,7 @@ public class HomeActivity extends Activity{
         });
     }
 
-    public void askForString(){
+    public void askForString() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Enter String");
@@ -114,16 +168,17 @@ public class HomeActivity extends Activity{
 
         // Set up the buttons
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                final Context context = HomeActivity.this;
-                Intent intent = new Intent(context, DisplayActivity.class);
-                Bundle bundle = new Bundle();
-                String text = "qr://"+input.getText().toString();
-                bundle.putString("text", text);
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }}
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        final Context context = HomeActivity.this;
+                        Intent intent = new Intent(context, DisplayActivity.class);
+                        Bundle bundle = new Bundle();
+                        String text = "qr://" + input.getText().toString();
+                        bundle.putString("text", text);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }
+                }
         );
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
@@ -134,7 +189,34 @@ public class HomeActivity extends Activity{
         builder.show();
     }
 
-//    public void configureCipher(){
+    public static PrivateKey getDefaultPrivateKey(){
+        return defaultPrivateKey;
+    }
+    public static PublicKey getDefaultPublicKey(){
+        return defaultPublicKey;
+    }
+
+    private void addListenerOnSharePublicKey() {
+        try {
+            Button btn = (Button) findViewById(R.id.sharePublicKey);
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.v("datsun", "sharing publick key");
+                    String pubString = new String(Base64.encode(defaultPublicKey.getEncoded(), Base64.DEFAULT));
+                    Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                    sharingIntent.setType("text/plain");
+                    sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Base64 encoded RSA Public Key");
+                    sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, pubString);
+                    startActivity(Intent.createChooser(sharingIntent,pubString));
+                }
+            });
+        }catch (Exception e){
+            Toast.makeText(HomeActivity.this, "Failed to share.", LENGTH_SHORT).show();
+        }
+    }
+
+    //    public void configureCipher(){
 //
 //        ArrayAdapter<String> adapter1, adapter2, adapter3 =null;
 //
@@ -232,4 +314,7 @@ public class HomeActivity extends Activity{
 //        });
 //        builder.show();
 //    }
+
 }
+
+
