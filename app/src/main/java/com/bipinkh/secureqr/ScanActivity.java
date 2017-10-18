@@ -85,7 +85,6 @@ public class ScanActivity extends AppCompatActivity {
         });
     }
 
-
     private void decodeWithDifferentListener() {
         Button decryptbutton = (Button) findViewById(R.id.decodeWithDifferent);
         decryptbutton.setOnClickListener(new View.OnClickListener() {
