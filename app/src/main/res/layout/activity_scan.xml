@@ -71,15 +71,6 @@
             tools:layout_editor_absoluteX="115dp"
             tools:layout_editor_absoluteY="261dp" />
 
-        <Button
-            android:id="@+id/decodeWithDifferent"
-            style="@android:style/Widget.Button.Inset"
-            android:layout_width="175dp"
-            android:layout_height="wrap_content"
-            android:text="Decrypt (different key)"
-            tools:layout_editor_absoluteX="115dp"
-            tools:layout_editor_absoluteY="291dp"
-            />
     </LinearLayout>
 
 

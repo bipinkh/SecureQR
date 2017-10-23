@@ -71,10 +71,8 @@ public class HomeActivity extends Activity {
         defaultPublicKeyString = settings.getString("defaultPublicKey", null);
         String checkString = settings.getString("checkString", null);
         Log.d("datsun","Checking :\n"+checkString);
-        Log.d("datsun", "Private Key::\n" + defaultPrivateKey + "\n\n");
-        Log.d("datsun", "Public Key::\n" + defaultPublicKey + "\n\n");
 
-        if (defaultPrivateKey == null || defaultPublicKey == null) {
+        if (defaultPrivateKeyString == null || defaultPublicKeyString == null) {
             Toast.makeText(this, "No stored keypair found. Generated new key pair to use.", Toast.LENGTH_LONG).show();
             KeyPair kp = null;
             try {
@@ -83,7 +81,11 @@ public class HomeActivity extends Activity {
                 Toast.makeText(this, "Failed to generate key pair", LENGTH_SHORT).show();
             }
             defaultPrivateKey = kp.getPrivate();
-            defaultPublicKey = kp.getPublic();/**/
+            defaultPublicKey = kp.getPublic();
+
+            Log.d("datsun", "New Private Key::\n" + defaultPrivateKey + "\n\n");
+            Log.d("datsun", "New Public Key::\n" + defaultPublicKey + "\n\n");
+
             setdefault(kp);
             Log.d("datsun", "generated !!");
         } else {
@@ -97,8 +99,8 @@ public class HomeActivity extends Activity {
             X509EncodedKeySpec keySpecPb = new X509EncodedKeySpec(encodedPb);
             defaultPublicKey = kf.generatePublic(keySpecPb);
 
-            Log.d("datsun", "retrieved prkey :\n" + defaultPrivateKey.toString());
-            Log.d("datsun", "retrieved pbkey :\n" + defaultPublicKey.toString());
+            Log.d("datsun", "retrieved prkey :\n" + defaultPrivateKey);
+            Log.d("datsun", "retrieved pbkey :\n" + defaultPublicKey);
         }
     }
 
@@ -112,6 +114,7 @@ public class HomeActivity extends Activity {
         editor.putString("checkString", "This string is to be stored");
         editor.commit();
         Toast.makeText(this, "Default Key Pair saved. You can share your Public Key to others.", Toast.LENGTH_LONG).show();
+
     }
 
     private void addListenerOnGenerator() {
@@ -246,24 +249,33 @@ public class HomeActivity extends Activity {
     }
 
     private void addListenerOnSharePublicKey() {
-        try {
-            Button btn = (Button) findViewById(R.id.sharePublicKey);
-            btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.v("datsun", "sharing publick key");
-                    String pubString = new String(Base64.encode(defaultPublicKey.getEncoded(), Base64.DEFAULT));
-                    Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-                    sharingIntent.setType("text/plain");
-                    sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Base64 encoded RSA Public Key");
-                    sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, pubString);
-                    startActivity(Intent.createChooser(sharingIntent,pubString));
-                }
-            });
-        }catch (Exception e){
-            Toast.makeText(HomeActivity.this, "Failed to share.", LENGTH_SHORT).show();
-        }
+        Button btn = (Button) findViewById(R.id.sharePublicKey);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Context context = HomeActivity.this;
+                Intent intent = new Intent(context, ServerActivity.class);
+                startActivity(intent);
+            }
+        });
     }
+//        try {
+//            Button btn = (Button) findViewById(R.id.sharePublicKey);
+//            btn.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Log.v("datsun", "sharing publick key");
+//                    String pubString = new String(Base64.encode(defaultPublicKey.getEncoded(), Base64.DEFAULT));
+//                    Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+//                    sharingIntent.setType("text/plain");
+//                    sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Base64 encoded RSA Public Key");
+//                    sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, pubString);
+//                    startActivity(Intent.createChooser(sharingIntent,pubString));
+//                }
+//            });
+//        }catch (Exception e){
+//            Toast.makeText(HomeActivity.this, "Failed to share.", LENGTH_SHORT).show();
+//        }
 
 
 //    public void saveToKeyStore(PrivateKey pbk) throws KeyStoreException, CertificateException, NoSuchAlgorithmException, IOException, UnrecoverableKeyException {

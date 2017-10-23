@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "35966840160",
+    "firebase_url": "https://secureqr-bipinkh.firebaseio.com",
+    "project_id": "secureqr-bipinkh",
+    "storage_bucket": "secureqr-bipinkh.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:35966840160:android:0bdf979329f7746e",
+        "android_client_info": {
+          "package_name": "com.bipinkh.secureqr"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "35966840160-mjo70n0c49sc02krs7loeq97qcrb5vdr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bipinkh.secureqr",
+            "certificate_hash": "e8dc6c709ae11828cde740fc9eef7c1f66d87e39"
+          }
+        },
+        {
+          "client_id": "35966840160-1h6b204q80o7s890j4p2udgd9avt12h0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHS1qs3PN6fU0S0kr15iBj8umtkkCf5v4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "35966840160-1h6b204q80o7s890j4p2udgd9avt12h0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

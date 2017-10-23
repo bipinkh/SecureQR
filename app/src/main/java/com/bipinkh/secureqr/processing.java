@@ -28,30 +28,7 @@ import javax.crypto.spec.SecretKeySpec;
  */
 
 public class processing {
-//    public static KeyPair GLOBALkeypair = null;
-//    public static PublicKey GLOBALpublic = null;
-//    public static PrivateKey GlOBALprivate = null;
-//
-//    public static void getKeypair(){
-//        if (GLOBALkeypair == null){
-//            try {
-//                GLOBALkeypair = rsaCipher.generateKeyPair(2048);
-//                GLOBALpublic = GLOBALkeypair.getPublic();
-//                GlOBALprivate = GLOBALkeypair.getPrivate();
-//            } catch (NoSuchAlgorithmException e) {
-//                e.printStackTrace();
-//            }}
-//    }
-//
-//    public static PrivateKey getPrivate(){
-//        getKeypair();
-//        return GLOBALkeypair.getPrivate();
-//    }
-//
-//    public static PublicKey getPublic(){
-//        getKeypair();
-//        return GLOBALkeypair.getPublic();
-//    }
+
 
     public static String encryption(String message, PublicKey pubkey){
         int ivSize = 16;
