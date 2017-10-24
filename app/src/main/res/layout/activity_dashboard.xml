@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.bipinkh.secureqr.DashboardActivity">
+
+    <Button
+        android:id="@+id/readQR"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Scan QR Code"
+        tools:layout_editor_absoluteX="111dp"
+        tools:layout_editor_absoluteY="123dp"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
+
+    <Button
+        android:id="@+id/writeQR"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/readQR"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="27dp"
+        android:elevation="0dp"
+        android:text="Write string as QR"
+        tools:layout_editor_absoluteX="111dp"
+        tools:layout_editor_absoluteY="213dp" />
+
+    <Button
+        android:id="@+id/friendlist"
+        style="@android:style/Widget.Material.Button.Inset"
+        android:layout_width="113dp"
+        android:layout_height="52dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:text="My Friends"
+        android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button"
+        tools:layout_editor_absoluteX="111dp"
+        tools:layout_editor_absoluteY="443dp" />
+
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:text="Logout"
+        android:id="@+id/signoutbtn"
+        />
+
+</RelativeLayout>
