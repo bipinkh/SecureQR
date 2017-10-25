@@ -28,8 +28,6 @@ import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 
-import static android.widget.Toast.LENGTH_SHORT;
-import static android.widget.Toast.makeText;
 
 public class DashboardActivity extends AppCompatActivity {
 
@@ -46,26 +44,35 @@ public class DashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-        // TODO: 10/23/2017
-        //add listener for readQR and writeQR
-
-        //listener on Authentication
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
+        //Listener for read button
+        Button writebtn = (Button) findViewById(R.id.writeQR);
+        writebtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if(user == null){   //if not signed in, then go to login page
-                    log("no login");
-                    Context context = DashboardActivity.this;
-                    Intent intent = new Intent(context,LoginSignUpActivity.class);
-                    startActivity(intent);
-                }
+            public void onClick(View v) {
+                startActivity(new Intent(DashboardActivity.this, QRwriteActivity.class));
             }
-        };
+        });
+
+        //Listener for scan button
+        Button readbtn = (Button) findViewById(R.id.readQR);
+        readbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(DashboardActivity.this, QRscanActivity.class));
+            }
+        });
+
+//        //listener on Authentication
+//        mAuthListener = new FirebaseAuth.AuthStateListener() {
+//            @Override
+//            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+//                FirebaseUser user = firebaseAuth.getCurrentUser();
+//                log("Signed in as :: "+user.getEmail());
+//            }
+//        };
 
         setupKeyPair();
         logoutlistener();
-        readFromFirebase();
 
         // Read from the database
         fdbref.addValueEventListener(new ValueEventListener() {
@@ -81,11 +88,7 @@ public class DashboardActivity extends AppCompatActivity {
                 // Failed to read value
                 log(error.toException().toString());            }
         });
-
-        //add private key to firebase
-
     }
-
 
     @Override
     public void onStart() {
@@ -99,11 +102,6 @@ public class DashboardActivity extends AppCompatActivity {
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
         }
-    }
-
-
-    public void readFromFirebase(){
-        log("tada");
     }
 
     private void setupKeyPair() {

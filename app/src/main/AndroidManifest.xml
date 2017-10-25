@@ -35,7 +35,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DashboardActivity"></activity>
+        <activity android:name=".DashboardActivity" />
+        <activity android:name=".QRwriteActivity" />
+        <activity android:name=".QRscanActivity"></activity>
     </application>
 
 </manifest>

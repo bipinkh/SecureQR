@@ -33,36 +33,30 @@ public class LoginSignUpActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                if(user != null){   //signed in. now, check if the email is genuine.
-                    Log.d("datsun","Credentials correct. Verifying your Email");
+                if(user!= null){
+                    Intent i = new Intent(LoginSignUpActivity.this, DashboardActivity.class);
+                    startActivity(i);
                 }
-                else{ //signed out
-                   stoast("Not logged in");
-                }
+                Log.d("datsun","AuthChanged");
+//                if(user != null){   //signed in.
+//                    if (user.isEmailVerified())
+//                    {
+//                        stoast("Email Verified.Logging In..");
+//                        Log.d("datsun","Email Verified");
+//                        Intent intent = new Intent(LoginSignUpActivity.this, DashboardActivity.class);
+//                        startActivity(intent);
+//                    }else{
+//                        FirebaseAuth.getInstance().signOut();
+//                    }
+//                }
+//                else{ //signed out
+//                   stoast("Not logged in");
+//                }
             }
         };
         mAuth.addAuthStateListener(mAuthListener);
-        addSignUpListener();    //sign up button
-        addSignInListener();    //sing in button
-    }
-
-    private void verifyEmail() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        user.sendEmailVerification()
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            // email sent
-                            FirebaseAuth.getInstance().signOut();
-                            ltoast("Confirmation Email Sent. Check your email to verify the account");
-                        }
-                        else
-                        {
-                            stoast("Email sending failed. Check your network connection");
-                        }
-                    }
-                });
+        addSignUpListener();    //sign up button listener
+        addSignInListener();    //sing in button listener
     }
 
     @Override
@@ -79,6 +73,46 @@ public class LoginSignUpActivity extends AppCompatActivity {
         }
     }
 
+    private void addSignInListener() {
+        final Button signinbtn = (Button) findViewById(R.id.signInbtn);
+        final EditText emailbtn = (EditText) findViewById(R.id.email);
+        final EditText passwordbtn = (EditText) findViewById(R.id.password);
+        signinbtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                String email = emailbtn.getText().toString();
+                String password = passwordbtn.getText().toString();
+                stoast("sigining in with:: "+ email + " : "+password +"\nplease wait..");
+                mAuth.signInWithEmailAndPassword(email,password)
+                        .addOnCompleteListener(LoginSignUpActivity.this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (!task.isSuccessful()) {
+                                    stoast("Sign In Failed.");
+                                } else {
+                                    Log.d("datsun","Verifying your email");
+                                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                    if (user.isEmailVerified())
+                                    {
+                                        stoast("Email Verified");
+                                        Log.d("datsun","Email Verified");
+                                        Intent intent = new Intent(LoginSignUpActivity.this, DashboardActivity.class);
+                                        startActivity(intent);
+                                    }
+                                    else
+                                    {
+                                        stoast("Email not Verified. Cannot Sign In.");
+                                        Log.d("datsun","Email not Verified. Cannot Sign In");
+                                        FirebaseAuth.getInstance().signOut();
+                                    }
+                                }
+                                // ...
+                            }
+                        });
+            }
+        });
+
+    }
 
     private void addSignUpListener() {
         final Button signupbtn = (Button) findViewById(R.id.signUpbtn);
@@ -89,59 +123,11 @@ public class LoginSignUpActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     String email = emailbtn.getText().toString();
                     String password = passwordbtn.getText().toString();
-                    Log.d("datsun","signing up...");
+                    Log.d("datsun","signing up..."+email+"  with password: "+password);
                     createAccount(email,password);
-                    Toast.makeText(LoginSignUpActivity.this, "Sigining up...", Toast.LENGTH_SHORT).show();
-                    verifyEmail();
                 }
             });
     }
-
-    private void addSignInListener() {
-        final Button signinbtn = (Button) findViewById(R.id.signInbtn);
-        final EditText emailbtn = (EditText) findViewById(R.id.email);
-        final EditText passwordbtn = (EditText) findViewById(R.id.password);
-       signinbtn.setOnClickListener(new View.OnClickListener(){
-           @Override
-           public void onClick(View v) {
-               String email = emailbtn.getText().toString();
-               String password = passwordbtn.getText().toString();
-               stoast("sigining in with:: "+ email + " : "+password +"\nplease wait..");
-               mAuth.signInWithEmailAndPassword(email,password)
-                       .addOnCompleteListener(LoginSignUpActivity.this, new OnCompleteListener<AuthResult>() {
-                           @Override
-                           public void onComplete(@NonNull Task<AuthResult> task) {
-                               if (!task.isSuccessful()) {
-                                    stoast("Sign In Failed.");
-                               } else {
-                                   stoast("Verifying your email");
-                                   Log.d("datsun","Verifying your email");
-                                   FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                                   if (user.isEmailVerified())
-                                   {
-                                       stoast("Email Verified");
-                                       Log.d("datsun","Email Verified");
-                                       Intent intent = new Intent(LoginSignUpActivity.this, DashboardActivity.class);
-                                       startActivity(intent);
-                                   }
-                                   else
-                                   {
-                                       stoast("Email not Verified. Cannot Sign In.");
-                                       Log.d("datsun","Email not Verified. Cannot Sign In");
-                                       FirebaseAuth.getInstance().signOut();
-
-                                   }
-                               }
-                               // ...
-                           }
-                       });
-           }
-       });
-
-    }
-
-
-
 
     public void createAccount(String email, String password){
         mAuth.createUserWithEmailAndPassword(email, password)
@@ -155,6 +141,28 @@ public class LoginSignUpActivity extends AppCompatActivity {
                             Toast.makeText(LoginSignUpActivity.this, "Failed Registration: "+e.getMessage().toString(), Toast.LENGTH_SHORT).show();
                         } else {
                             Log.d("datsun", "Successful sign up.");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            if (user != null) {
+                                user.sendEmailVerification()
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    // email sent
+                                                    FirebaseAuth.getInstance().signOut();
+                                                    ltoast("Confirmation Email Sent. Check your email to verify the account");
+                                                }
+                                                else
+                                                {
+                                                    FirebaseAuth.getInstance().signOut();
+                                                    stoast("Email sending failed. Check your network connection");
+                                                }
+                                            }
+                                        });
+                                Log.d("datsun","email sent");
+                            }else{
+                                stoast("Null user");
+                            }
                         }
                     }
                 });

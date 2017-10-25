@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.bipinkh.secureqr.QRwriteActivity">
+
+    <EditText
+        android:id="@+id/messagebox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter String messages here"
+        android:lines="5"
+        android:layout_marginTop="20dp"
+        />
+
+    <EditText
+        android:id="@+id/receiverEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_below="@+id/messagebox"
+        android:hint="Enter receipent email"
+        />
+
+
+    <Button
+        android:id="@+id/makeQRbtn"
+        style="@android:style/Widget.DeviceDefault.Light.Button.Inset"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/receiverEmail"
+        android:layout_marginTop="30dp"
+        android:hint="Click to make QR" />
+
+</RelativeLayout>

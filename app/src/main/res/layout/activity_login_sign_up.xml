@@ -37,13 +37,20 @@
         android:hint="Password"
         />
 
-
+    <View
+        android:id="@+id/centerShim"
+        android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:visibility="invisible"
+        android:layout_centerHorizontal="true"/>
     <Button
         android:id="@+id/signInbtn"
         style="@android:style/Widget.Material.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/password"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/centerShim"
+        android:layout_below="@+id/password"
         android:layout_marginTop="20dp"
         android:text="Sign In" />
 
@@ -52,7 +59,9 @@
         style="@android:style/Widget.Material.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/signInbtn"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@id/centerShim"
+        android:layout_below="@id/password"
         android:layout_marginTop="20dp"
         android:text="Sign Up" />
 
