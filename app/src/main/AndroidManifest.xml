@@ -38,7 +38,8 @@
         <activity android:name=".DashboardActivity" />
         <activity android:name=".QRwriteActivity" />
         <activity android:name=".QRscanActivity" />
-        <activity android:name=".ResultDisplayActivity"></activity>
+        <activity android:name=".ResultDisplayActivity" />
+        <activity android:name=".ImageDisplayActivity"></activity>
     </application>
 
 </manifest>

@@ -34,21 +34,23 @@ public class LoginSignUpActivity extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if(user!= null){
-                    if(user.isEmailVerified()){
-                        Intent i = new Intent(LoginSignUpActivity.this, DashboardActivity.class);
-                        startActivity(i);
+                    Log.d("datsun", "user on connection ::"+user.getEmail());
                     }else{
                         Log.d("datsun", "Email Not verified.");
                     }
 
                 }
-                Log.d("datsun","AuthChanged");
-            }
-        };
+            };
         mAuth.addAuthStateListener(mAuthListener);
         addSignUpListener();    //sign up button listener
         addSignInListener();    //sing in button listener
-    }
+        if ( (mAuth.getCurrentUser() != null) && (mAuth.getCurrentUser().isEmailVerified()) ){
+            Log.d("datsun", "onCreate: Session started at the begining");
+            Intent intent = new Intent(LoginSignUpActivity.this, DashboardActivity.class);
+            startActivity(intent);
+        }
+        }
+
 
     @Override
     public void onStart() {
@@ -134,22 +136,23 @@ public class LoginSignUpActivity extends AppCompatActivity {
                             Log.d("datsun", "Successful sign up.");
                             FirebaseUser user = mAuth.getCurrentUser();
                             if (user != null) {
-                                user.sendEmailVerification()
-                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if (task.isSuccessful()) {
-                                                    // email sent
-                                                    FirebaseAuth.getInstance().signOut();
-                                                    ltoast("Confirmation Email Sent. Check your email to verify the account");
-                                                }
-                                                else
-                                                {
-                                                    FirebaseAuth.getInstance().signOut();
-                                                    stoast("Email sending failed. Check your network connection");
-                                                }
-                                            }
-                                        });
+                                user.sendEmailVerification();
+                                ltoast("Confirmation Email Sent. Check your email to verify the account");
+//                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                            @Override
+//                                            public void onComplete(@NonNull Task<Void> task) {
+//                                                if (task.isSuccessful()) {
+//                                                    // email sent
+//                                                    FirebaseAuth.getInstance().signOut();
+//                                                    ltoast("Confirmation Email Sent. Check your email to verify the account");
+//                                                }
+//                                                else
+//                                                {
+//                                                    FirebaseAuth.getInstance().signOut();
+//                                                    stoast("Email sending failed. Check your network connection");
+//                                                }
+//                                            }
+//                                        });
                                 Log.d("datsun","email sent");
                             }else{
                                 stoast("Null user");
