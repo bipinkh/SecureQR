@@ -34,24 +34,15 @@ public class LoginSignUpActivity extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if(user!= null){
-                    Intent i = new Intent(LoginSignUpActivity.this, DashboardActivity.class);
-                    startActivity(i);
+                    if(user.isEmailVerified()){
+                        Intent i = new Intent(LoginSignUpActivity.this, DashboardActivity.class);
+                        startActivity(i);
+                    }else{
+                        Log.d("datsun", "Email Not verified.");
+                    }
+
                 }
                 Log.d("datsun","AuthChanged");
-//                if(user != null){   //signed in.
-//                    if (user.isEmailVerified())
-//                    {
-//                        stoast("Email Verified.Logging In..");
-//                        Log.d("datsun","Email Verified");
-//                        Intent intent = new Intent(LoginSignUpActivity.this, DashboardActivity.class);
-//                        startActivity(intent);
-//                    }else{
-//                        FirebaseAuth.getInstance().signOut();
-//                    }
-//                }
-//                else{ //signed out
-//                   stoast("Not logged in");
-//                }
             }
         };
         mAuth.addAuthStateListener(mAuthListener);

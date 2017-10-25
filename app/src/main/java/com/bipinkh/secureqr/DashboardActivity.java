@@ -28,6 +28,8 @@ import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 
+import static android.widget.Toast.LENGTH_SHORT;
+import static android.widget.Toast.makeText;
 
 public class DashboardActivity extends AppCompatActivity {
 
@@ -62,46 +64,10 @@ public class DashboardActivity extends AppCompatActivity {
             }
         });
 
-//        //listener on Authentication
-//        mAuthListener = new FirebaseAuth.AuthStateListener() {
-//            @Override
-//            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-//                FirebaseUser user = firebaseAuth.getCurrentUser();
-//                log("Signed in as :: "+user.getEmail());
-//            }
-//        };
 
         setupKeyPair();
         logoutlistener();
 
-        // Read from the database
-        fdbref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Object value = dataSnapshot.getValue();
-//                String value = dataSnapshot.getValue(String.class);
-                log("don't know what happende here. but called data changed in firebase.");
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                log(error.toException().toString());            }
-        });
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
-        }
     }
 
     private void setupKeyPair() {
@@ -124,7 +90,7 @@ public class DashboardActivity extends AppCompatActivity {
         //check if there is already saved private key for the email in local machine
         SharedPreferences sp = getApplicationContext().getSharedPreferences("privateKeys", 0);
         String privateKeyString = sp.getString(email, "-"); //get private key of email or get -
-        log("got this from stored sharedpref ::: " + privateKeyString);
+        log("got private key from stored sharedpref");
 
         if (privateKeyString.equals("-")) { //no saved private key
             log("not found in shared preference. now generating new pair.");
@@ -146,27 +112,15 @@ public class DashboardActivity extends AppCompatActivity {
             log("Private Key saved to sp");
 
             //save public key to firebase or update if already existed
-            String publickey = Base64.encodeToString(kp.getPrivate().getEncoded(), Base64.DEFAULT);
+            String publickey = Base64.encodeToString(kp.getPublic().getEncoded(), Base64.DEFAULT);
             String databasePath = email.substring(0, email.indexOf("@"));
             log("database path:: " + databasePath);
             fdbref.child("Public Keys").child(databasePath).setValue(publickey);
+            log("uploaded key for \n"+email+"\n\n"+publickey);
 
         } else {
             //found privatekey in sp
-            //convert string to private key
-            try {
-                KeyFactory kf = KeyFactory.getInstance("RSA");
-                byte[] encodedPv = Base64.decode(privateKeyString, Base64.DEFAULT);
-                PKCS8EncodedKeySpec keySpecPv = new PKCS8EncodedKeySpec(encodedPv);
-                try {
-                    prkey = kf.generatePrivate(keySpecPv);
-                    log("private key retrieved from sp :: "+prkey.toString());
-                } catch (InvalidKeySpecException e) {
-                    log("invalid key exception for generating private key froom string");
-                }
-            } catch (NoSuchAlgorithmException e) {
-                log("KeyFactory exception:: No Algorithm");
-            }
+            log("Private Key found in sp");
         }
     }
 

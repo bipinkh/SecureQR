@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.bipinkh.secureqr.ResultDisplayActivity">
+
+
+    <TextView
+        android:id="@+id/topText"
+        android:layout_width="118dp"
+        android:layout_height="32dp"
+        android:text="QR Scan Result:"
+        android:textColor="@android:color/holo_red_dark"
+        android:textSize="15dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        />
+
+    <ScrollView
+        android:id="@+id/resultScroller"
+        android:layout_width="match_parent"
+        android:layout_height="182dp"
+        android:layout_marginLeft="5dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/topText" >
+
+        <TextView
+            android:id="@+id/resultText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="13dp" />
+    </ScrollView>
+
+    <TextView
+        android:id="@+id/decryptedText"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:textColor="@android:color/holo_red_dark"
+        android:textSize="15dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/resultScroller"
+        />
+
+    <ScrollView
+        android:id="@+id/decryptedScroller"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/decryptedText"
+        >
+        <TextView
+            android:id="@+id/decryptResulttext"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="13dp" />
+    </ScrollView>
+
+
+        <Button
+            android:id="@+id/decryptBtn"
+            style="@android:style/Widget.Button.Inset"
+            android:layout_width="175dp"
+            android:layout_height="wrap_content"
+            android:text="Decrypt"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/decryptedScroller"
+            />
+
+</RelativeLayout>
