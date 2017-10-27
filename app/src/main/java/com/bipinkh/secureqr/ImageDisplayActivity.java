@@ -85,7 +85,8 @@ public class ImageDisplayActivity extends AppCompatActivity {
             img.createNewFile();
         } catch (IOException e) {
         }
-
+        Log.d("datsun", "filesave: "+dir);
+        Log.d("datsun", "filesave: "+filename);
         File file = new File(dir, filename);
         FileOutputStream fOut = null;
         try {
@@ -104,16 +105,15 @@ public class ImageDisplayActivity extends AppCompatActivity {
 
     private void sharefile(){
         String myFileName = filesave();
-        String image_location = Environment.getExternalStorageDirectory().getAbsolutePath()+"/SecureQR/"+myFileName;
+        String image_location = Environment.getExternalStorageDirectory().getAbsolutePath()+"/SecureQR/";
 
         try{
             Intent share = new Intent(Intent.ACTION_SEND);
-            share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            Uri uri = Uri.parse(image_location);
-            Log.d("datsun", "sharefile: image name" +image_location);
-            Log.d("datsun", "sharefile: image uri " +uri);
-            share.setType("image/*");
-            share.putExtra(Intent.EXTRA_STREAM, uri);
+            share.setType("image/png");
+//            share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            final File photoFile = new File(image_location,myFileName);
+            Log.d("datsun", "sharefile: image name" +photoFile);
+            share.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(photoFile));
             startActivity(Intent.createChooser(share, "Share QR"));
         }catch (Exception e){
             Log.d("datsun", "sharefile: sharing image failed"+e);

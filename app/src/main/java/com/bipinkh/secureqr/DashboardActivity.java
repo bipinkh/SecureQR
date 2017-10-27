@@ -115,10 +115,8 @@ public class DashboardActivity extends AppCompatActivity {
 
             //save public key to firebase or update if already existed
             String publickey = Base64.encodeToString(kp.getPublic().getEncoded(), Base64.DEFAULT);
-            String databasePath = email.substring(0,email.charAt('@'));
-//            String databasePath = email.replaceAll(".", "%2E");
-//            databasePath = databasePath.replaceAll("_", "%1E");
-//            databasePath = databasePath.replaceAll("@", "%0E");
+            String databasePath = email.replaceAll("[^a-zA-Z0-9]", "");
+            //truncated special from email as firebase key doesnt support them
             log("database path:: " + databasePath);
             fdbref.child("Public Keys").child(databasePath).setValue(publickey);
             log("uploaded key for \n"+email+"\n\n"+publickey);

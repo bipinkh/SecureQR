@@ -15,7 +15,7 @@
         android:gravity="bottom|left"
         android:layout_below="@+id/receiverEmail"
         android:hint="Enter String messages here"
-        android:lines="10" />
+        android:lines="7" />
 
     <EditText
         android:id="@+id/receiverEmail"

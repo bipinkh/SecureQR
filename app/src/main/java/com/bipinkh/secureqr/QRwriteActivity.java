@@ -94,10 +94,10 @@ public class QRwriteActivity extends AppCompatActivity {
                 log("message to encrypt::"+message);
                 final String receiver = receiverEmail.getText().toString();
                 log("check");
-                String databasePath = receiver.substring(0,receiver.charAt('@'));
+                log(receiver);
+                //truncate special characters from email to get database key
+                String databasePath = receiver.replaceAll("[^a-zA-Z0-9]", "");
                 log("database key:::"+databasePath);
-
-//                checkWifi(); //make sure wifi is turned on
 
                 //get public key of the receiver
                 DatabaseReference refOfPublicKey = fdbref.child("Public Keys").child(databasePath);
@@ -146,7 +146,8 @@ public class QRwriteActivity extends AppCompatActivity {
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-
+                            toast("Error in database: "+databaseError.getMessage().toString());
+                            log("Error in database: "+databaseError.getMessage().toString());
                     }
                 });
             }

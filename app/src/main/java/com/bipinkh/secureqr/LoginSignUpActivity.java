@@ -9,6 +9,7 @@ import android.net.wifi.WifiManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -33,6 +34,7 @@ public class LoginSignUpActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_sign_up);
+
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -178,10 +180,10 @@ public class LoginSignUpActivity extends AppCompatActivity {
 
     private boolean checkEmptyFieldAndWifi() {
 
-        EditText email = (EditText) findViewById(R.id.email);
+        EditText emailString = (EditText) findViewById(R.id.email);
         EditText password = (EditText) findViewById(R.id.password);
         //make sure no field is empty
-        if(email.getText().toString().trim().length()==0 || password.getText().toString().trim().length()==0 ){
+        if(emailString.getText().toString().trim().length()==0 || password.getText().toString().trim().length()==0 ){
             Toast.makeText(LoginSignUpActivity.this, "Please enter valid email and password.", Toast.LENGTH_LONG).show();
             return false;
         }
@@ -196,7 +198,7 @@ public class LoginSignUpActivity extends AppCompatActivity {
             return false;
         }
         //if all cases are matched, then login/sign up user
-        stoast("sigining in with:: " + email);
+        stoast("signing in..");
         return true;
     }
 
@@ -217,7 +219,7 @@ public class LoginSignUpActivity extends AppCompatActivity {
                         ltoast("Wifi Enabled. Wait for it to be ON and resubmit your request");
                     }
                 });
-        builder.setNegativeButton("Okay", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
