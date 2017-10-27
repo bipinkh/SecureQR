@@ -6,30 +6,49 @@
     android:layout_height="match_parent"
     tools:context="com.bipinkh.secureqr.DashboardActivity">
 
-    <Button
+
+    <ImageButton
         android:id="@+id/readQR"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Scan QR Code"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         tools:layout_editor_absoluteX="111dp"
         tools:layout_editor_absoluteY="123dp"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
-
-
-    <Button
-        android:id="@+id/writeQR"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/readQR"
+        android:background="@drawable/scan_qr"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="27dp"
-        android:elevation="0dp"
-        android:text="Write string as QR"
-        tools:layout_editor_absoluteX="111dp"
-        tools:layout_editor_absoluteY="213dp" />
+        android:layout_marginTop="50dp"/>
+    <TextView
+        android:id="@+id/readQRname"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="Scan QR"
+        android:layout_below="@+id/readQR"
+        android:layout_marginTop="-15dp"
+        android:layout_marginBottom="50dp"
+        android:layout_centerHorizontal="true"
+        android:textColor="#ff4182"
+        />
+
+
+    <ImageButton
+        android:id="@+id/writeQR"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_above="@+id/readQR"
+        android:background="@drawable/pencil"
+        android:layout_centerHorizontal="true"
+        />
+    <TextView
+        android:id="@+id/writeQRname"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="Write QR"
+        android:layout_below="@+id/writeQR"
+        android:layout_marginBottom="50dp"
+        android:layout_centerHorizontal="true"
+        android:textColor="#ff4182"
+        />
+
 
 
     <Button

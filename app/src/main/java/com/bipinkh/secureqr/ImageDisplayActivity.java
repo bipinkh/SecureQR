@@ -85,8 +85,6 @@ public class ImageDisplayActivity extends AppCompatActivity {
             img.createNewFile();
         } catch (IOException e) {
         }
-        Log.d("datsun", "filesave: "+dir);
-        Log.d("datsun", "filesave: "+filename);
         File file = new File(dir, filename);
         FileOutputStream fOut = null;
         try {
@@ -94,7 +92,6 @@ public class ImageDisplayActivity extends AppCompatActivity {
             bmpImage.compress(Bitmap.CompressFormat.PNG, 100, fOut);
             fOut.flush();
             fOut.close();
-            Log.d("datsun", "saveBtnListener: Saved Image to gallery");
             Toast.makeText(ImageDisplayActivity.this, "Saved to gallery with name :: "+filename, Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             e.printStackTrace();
@@ -110,9 +107,7 @@ public class ImageDisplayActivity extends AppCompatActivity {
         try{
             Intent share = new Intent(Intent.ACTION_SEND);
             share.setType("image/png");
-//            share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             final File photoFile = new File(image_location,myFileName);
-            Log.d("datsun", "sharefile: image name" +photoFile);
             share.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(photoFile));
             startActivity(Intent.createChooser(share, "Share QR"));
         }catch (Exception e){

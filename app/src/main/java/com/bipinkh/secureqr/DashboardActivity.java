@@ -11,6 +11,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -48,7 +49,7 @@ public class DashboardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_dashboard);
 
         //Listener for read button
-        Button writebtn = (Button) findViewById(R.id.writeQR);
+        ImageButton writebtn = (ImageButton) findViewById(R.id.writeQR);
         writebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,7 +58,7 @@ public class DashboardActivity extends AppCompatActivity {
         });
 
         //Listener for scan button
-        Button readbtn = (Button) findViewById(R.id.readQR);
+        ImageButton readbtn = (ImageButton) findViewById(R.id.readQR);
         readbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
