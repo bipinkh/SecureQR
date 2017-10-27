@@ -146,8 +146,8 @@ public class QRwriteActivity extends AppCompatActivity {
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-                            toast("Error in database: "+databaseError.getMessage().toString());
-                            log("Error in database: "+databaseError.getMessage().toString());
+                        toast("Error in database: "+databaseError.getMessage().toString());
+                        log("Error in database: "+databaseError.getMessage().toString());
                     }
                 });
             }
@@ -185,54 +185,6 @@ public class QRwriteActivity extends AppCompatActivity {
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
-
-//    public boolean checkWifi(){
-//        //open wifi, if it's off
-//        @SuppressLint("WifiManagerLeak")
-//        final WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-//        if(! wifi.isWifiEnabled()){
-//            AlertDialog.Builder builder = new AlertDialog.Builder(QRwriteActivity.this);
-//            builder.setTitle("Info");
-//            builder.setMessage("Your Wifi needs to be enabled to sign in and sign up." +
-//                    "\nApp cannot verify account with no Network access." +
-//                    "\n\nSecure QR will now enable your Wifi.");
-//            builder.setPositiveButton("OK", new DialogInterface.OnClickListener(){
-//                @Override
-//                public void onClick(DialogInterface dialog, int which) {
-//                    wifi.setWifiEnabled(true);
-//                    toast("Wifi Enabled. Please wait till wifi is ON and Re-make QR");
-//                }
-//            });
-//            builder.setNegativeButton("Okay", new DialogInterface.OnClickListener() {
-//                @Override
-//                public void onClick(DialogInterface dialog, int which) {
-//                    dialog.cancel();
-//                }
-//            });
-//            AlertDialog alert = builder.create();
-//            alert.show();
-//        }
-//        if (wifi.isWifiEnabled()){
-//            return true;
-//        }else{
-//            return false;
-//        }
-//    }
-
-
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//        mAuth.addAuthStateListener(mAuthListener);
-//    }
-//
-//    @Override
-//    public void onStop() {
-//        super.onStop();
-//        if (mAuthListener != null) {
-//            mAuth.removeAuthStateListener(mAuthListener);
-//        }
-//    }
 
     public void toast(String s) {
         Toast.makeText(QRwriteActivity.this,s,Toast.LENGTH_SHORT).show();}

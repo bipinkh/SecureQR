@@ -184,17 +184,17 @@ public class LoginSignUpActivity extends AppCompatActivity {
         EditText password = (EditText) findViewById(R.id.password);
         //make sure no field is empty
         if(emailString.getText().toString().trim().length()==0 || password.getText().toString().trim().length()==0 ){
-            Toast.makeText(LoginSignUpActivity.this, "Please enter valid email and password.", Toast.LENGTH_LONG).show();
+            stoast("Please enter valid email and password.");
             return false;
         }
         //make sure password is minimum of 8 characters
         if(password.getText().toString().trim().length()<8){
-            ltoast("Password requires a minimum of eight characters");
+            stoast("Password requires a minimum of eight characters");
             return false;
         }
         //make sure wifi is also turned on
         if ( !checkWifi() ) {
-            ltoast("You must grant permission to enable Wifi. Or, enable it yourself");
+            stoast("You must grant permission to enable Wifi. Or, enable it yourself");
             return false;
         }
         //if all cases are matched, then login/sign up user
@@ -216,7 +216,7 @@ public class LoginSignUpActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         wifi.setWifiEnabled(true);
-                        ltoast("Wifi Enabled. Wait for it to be ON and resubmit your request");
+                        stoast("Wifi Enabled. Wait for it to be ON and resubmit your request");
                     }
                 });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

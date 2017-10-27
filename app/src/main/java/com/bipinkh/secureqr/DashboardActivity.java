@@ -44,9 +44,25 @@ public class DashboardActivity extends AppCompatActivity {
     private DatabaseReference fdbref;
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        //if no user is signed in or signed in user has no email verified, go back to LoginActivity
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if ((user == null ) || ( ! user.isEmailVerified())){
+            startActivity( new Intent(DashboardActivity.this, LoginSignUpActivity.class) );
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+
+        //if no user is signed in or signed in user has no email verified, go back to LoginActivity
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if ((user == null ) || ( ! user.isEmailVerified())){
+            startActivity( new Intent(DashboardActivity.this, LoginSignUpActivity.class) );
+        }
 
         //Listener for read button
         ImageButton writebtn = (ImageButton) findViewById(R.id.writeQR);
@@ -69,8 +85,7 @@ public class DashboardActivity extends AppCompatActivity {
         //listener for logout button
         logoutlistener();
 
-        //load stored private key for that email,
-        // or make new one in case there's none
+        //load stored private key for that email, or make new one in case there's none
         setupKeyPair();
 
     }
