@@ -3,6 +3,7 @@ package com.bipinkh.secureqr;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -64,9 +65,12 @@ public class DashboardActivity extends AppCompatActivity {
             }
         });
 
-
-        setupKeyPair();
+        //listener for logout button
         logoutlistener();
+
+        //load stored private key for that email,
+        // or make new one in case there's none
+        setupKeyPair();
 
     }
 
@@ -74,8 +78,6 @@ public class DashboardActivity extends AppCompatActivity {
 
         //key pair
         KeyPair kp = null;
-        PrivateKey prkey = null;
-        PublicKey pbkey = null;
 
         //initializing firebase
         mAuth = FirebaseAuth.getInstance();
@@ -92,7 +94,7 @@ public class DashboardActivity extends AppCompatActivity {
         String privateKeyString = sp.getString(email, "-"); //get private key of email or get -
         log("got private key from stored sharedpref");
 
-        if (privateKeyString.equals("-")) { //no saved private key
+        if (privateKeyString.equals("-")) {
             log("not found in shared preference. now generating new pair.");
             //no private key found for the email...
             //generate key pair
@@ -113,7 +115,10 @@ public class DashboardActivity extends AppCompatActivity {
 
             //save public key to firebase or update if already existed
             String publickey = Base64.encodeToString(kp.getPublic().getEncoded(), Base64.DEFAULT);
-            String databasePath = email.substring(0, email.indexOf("@"));
+            String databasePath = email.substring(0,email.charAt('@'));
+//            String databasePath = email.replaceAll(".", "%2E");
+//            databasePath = databasePath.replaceAll("_", "%1E");
+//            databasePath = databasePath.replaceAll("@", "%0E");
             log("database path:: " + databasePath);
             fdbref.child("Public Keys").child(databasePath).setValue(publickey);
             log("uploaded key for \n"+email+"\n\n"+publickey);

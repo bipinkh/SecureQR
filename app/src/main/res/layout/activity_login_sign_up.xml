@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:text="Sign In / Sign Up"
-        android:textSize="20dp"
+        android:textSize="25dp"
         android:textColor="@color/colorAccent"
         android:layout_centerHorizontal="true"
         android:id="@+id/toptext"
@@ -26,16 +26,23 @@
         android:layout_alignParentTop="true"
         android:paddingTop="10dp"
         android:layout_marginTop="50dp"
+        android:background="?attr/actionModeBackground"
         android:hint="Email"
+        android:drawableLeft="@mipmap/email"
+        android:drawablePadding="5dp"
         />
+
     <EditText
+        android:id="@+id/password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/password"
         android:layout_below="@+id/email"
         android:layout_marginTop="20dp"
+        android:background="?attr/actionModeBackground"
+        android:drawableLeft="@mipmap/lock"
+        android:drawablePadding="5dp"
         android:hint="Password"
-        />
+        android:inputType="textPassword" />
 
     <View
         android:id="@+id/centerShim"
@@ -43,27 +50,40 @@
         android:layout_width="0dp"
         android:visibility="invisible"
         android:layout_centerHorizontal="true"/>
+
     <Button
         android:id="@+id/signInbtn"
-        style="@android:style/Widget.Material.Button"
+        style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_toLeftOf="@+id/centerShim"
         android:layout_below="@+id/password"
         android:layout_marginTop="20dp"
+        android:layout_toLeftOf="@+id/centerShim"
+        android:drawableLeft="@android:drawable/presence_online"
         android:text="Sign In" />
 
     <Button
         android:id="@+id/signUpbtn"
-        style="@android:style/Widget.Material.Button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
         android:layout_alignParentRight="true"
-        android:layout_toRightOf="@id/centerShim"
         android:layout_below="@id/password"
         android:layout_marginTop="20dp"
+        android:layout_toRightOf="@id/centerShim"
+        android:drawableLeft="@android:drawable/ic_input_add"
         android:text="Sign Up" />
+
+    <Button
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:id="@+id/guestBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:drawableLeft="@android:drawable/ic_menu_view"
+        android:text="Quick QR Scan (Guest)" />
 
 
 </RelativeLayout>

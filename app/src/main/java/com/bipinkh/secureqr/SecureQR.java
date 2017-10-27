@@ -13,7 +13,6 @@ public class SecureQR extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Toast.makeText(this,"Checking the call here", Toast.LENGTH_LONG).show();
         Firebase.setAndroidContext(this);
     }
 }

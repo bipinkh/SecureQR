@@ -58,14 +58,25 @@
     </ScrollView>
 
 
-        <Button
-            android:id="@+id/decryptBtn"
-            style="@android:style/Widget.Button.Inset"
-            android:layout_width="175dp"
-            android:layout_height="wrap_content"
-            android:text="Decrypt"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@id/decryptedScroller"
-            />
+    <Button
+        android:id="@+id/decryptBtn"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:textColor="#000000"
+        android:layout_above="@+id/guestInfo"
+        android:layout_centerHorizontal="true"
+        android:drawableLeft="@android:drawable/ic_menu_view"
+        android:drawablePadding="10dp"
+        android:text="DECRYPT  "
+        android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/guestInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        />
 
 </RelativeLayout>

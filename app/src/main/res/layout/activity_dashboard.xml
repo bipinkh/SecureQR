@@ -31,24 +31,16 @@
         tools:layout_editor_absoluteX="111dp"
         tools:layout_editor_absoluteY="213dp" />
 
-    <Button
-        android:id="@+id/friendlist"
-        style="@android:style/Widget.Material.Button.Inset"
-        android:layout_width="113dp"
-        android:layout_height="52dp"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:text="My Friends"
-        android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button"
-        tools:layout_editor_absoluteX="111dp"
-        tools:layout_editor_absoluteY="443dp" />
 
     <Button
-        android:layout_width="100dp"
+        android:id="@+id/signoutbtn"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:text="Logout"
-        android:id="@+id/signoutbtn"
+        android:textColor="#4245ef"
         />
 
 </RelativeLayout>

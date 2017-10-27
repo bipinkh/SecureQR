@@ -1,10 +1,13 @@
 package com.bipinkh.secureqr;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.wifi.WifiManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -30,6 +33,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 
+import java.io.ByteArrayOutputStream;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
@@ -89,12 +93,14 @@ public class QRwriteActivity extends AppCompatActivity {
                 final String message = "qr://"+messagebox.getText().toString();
                 log("message to encrypt::"+message);
                 final String receiver = receiverEmail.getText().toString();
-                String databaseKey = receiver.substring(0, receiver.indexOf("@"));
-                log("database key:::"+databaseKey);
+                log("check");
+                String databasePath = receiver.substring(0,receiver.charAt('@'));
+                log("database key:::"+databasePath);
 
+//                checkWifi(); //make sure wifi is turned on
 
                 //get public key of the receiver
-                DatabaseReference refOfPublicKey = fdbref.child("Public Keys").child(databaseKey);
+                DatabaseReference refOfPublicKey = fdbref.child("Public Keys").child(databasePath);
                 refOfPublicKey.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -109,31 +115,25 @@ public class QRwriteActivity extends AppCompatActivity {
                                 receiverKey = kf.generatePublic(keySpecPv);
                             } catch (InvalidKeySpecException e) {
                                 e.printStackTrace();
-                                log("what's happening here ??\n"+e.toString());
+                                log("chchchchch"+e.toString());
                             }
                             log("public key retrieved from firebase :: "+receiverKey);
 
-                        //encrypt message
+                            //encrypt message
                             try {
                                 byte[] bytemsg = rsaCipher.encryption(message,receiverKey);
                                 String finalText = Base64.encodeToString(bytemsg, Base64.DEFAULT);
                                 log("Encrypted text to QR ::: "+finalText);
                                 //make qr
                                 Bitmap bmQR = generateQR(1000,1000, finalText);
-                                //display qr
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(QRwriteActivity.this);
-                                    builder.setTitle("QR Image");
-                                    ImageView image = new ImageView(QRwriteActivity.this);
-                                    image.setImageBitmap(bmQR);
-                                    builder.setView(image);
-                                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    dialog.cancel();
-                                                }
-                                            }
-                                    );
-                                    builder.create().show();
+                                //call imager display for qr
+                                Intent intent = new Intent (QRwriteActivity.this, ImageDisplayActivity.class);
+                                ByteArrayOutputStream bs = new ByteArrayOutputStream();
+                                bmQR.compress(Bitmap.CompressFormat.PNG, 100, bs);
+                                intent.putExtra("byteArray", bs.toByteArray());
+                                intent.putExtra("receiver",receiver);
+                                intent.putExtra("sender",mAuth.getCurrentUser().getEmail());
+                                startActivity(intent);
 
                             } catch (Exception e) {
                                 log("Cannot encrypt ::"+e);
@@ -171,7 +171,6 @@ public class QRwriteActivity extends AppCompatActivity {
         return bmp;
     }
 
-
     @Override
     public void onStart() {
         super.onStart();
@@ -186,6 +185,38 @@ public class QRwriteActivity extends AppCompatActivity {
         }
     }
 
+//    public boolean checkWifi(){
+//        //open wifi, if it's off
+//        @SuppressLint("WifiManagerLeak")
+//        final WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+//        if(! wifi.isWifiEnabled()){
+//            AlertDialog.Builder builder = new AlertDialog.Builder(QRwriteActivity.this);
+//            builder.setTitle("Info");
+//            builder.setMessage("Your Wifi needs to be enabled to sign in and sign up." +
+//                    "\nApp cannot verify account with no Network access." +
+//                    "\n\nSecure QR will now enable your Wifi.");
+//            builder.setPositiveButton("OK", new DialogInterface.OnClickListener(){
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+//                    wifi.setWifiEnabled(true);
+//                    toast("Wifi Enabled. Please wait till wifi is ON and Re-make QR");
+//                }
+//            });
+//            builder.setNegativeButton("Okay", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+//                    dialog.cancel();
+//                }
+//            });
+//            AlertDialog alert = builder.create();
+//            alert.show();
+//        }
+//        if (wifi.isWifiEnabled()){
+//            return true;
+//        }else{
+//            return false;
+//        }
+//    }
 
 
 //    @Override
