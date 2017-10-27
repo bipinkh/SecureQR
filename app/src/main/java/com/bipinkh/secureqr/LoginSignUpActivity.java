@@ -234,7 +234,6 @@ public class LoginSignUpActivity extends AppCompatActivity {
         return false;
     }
 }
-
     //my widgets for easy call
     public void ltoast(String s){Toast.makeText(LoginSignUpActivity.this,s,Toast.LENGTH_LONG).show();}
     public void stoast(String s){Toast.makeText(LoginSignUpActivity.this,s,Toast.LENGTH_SHORT).show();}

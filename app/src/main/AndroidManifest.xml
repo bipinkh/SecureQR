@@ -4,7 +4,6 @@
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.VIBRATE" />
-
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
@@ -23,7 +22,7 @@
     <provider
         android:name=".ImageProvider"
         android:authorities="com.bipinkh.secureqr"
-        android:exported="true"/>
+        android:exported="true" />
 
     <application
         android:name=".SecureQR"
@@ -44,7 +43,8 @@
         <activity android:name=".QRwriteActivity" />
         <activity android:name=".QRscanActivity" />
         <activity android:name=".ResultDisplayActivity" />
-        <activity android:name=".ImageDisplayActivity"></activity>
+        <activity android:name=".ImageDisplayActivity" />
+
     </application>
 
 </manifest>

@@ -1,11 +1,16 @@
 package com.bipinkh.secureqr;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,6 +28,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import static android.Manifest.permission.CAMERA;
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class ImageDisplayActivity extends AppCompatActivity {
 
@@ -57,7 +66,12 @@ public class ImageDisplayActivity extends AppCompatActivity {
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                filesave();
+                if (checkPermission()) {
+                    String filename = filesave();
+                    Toast.makeText(ImageDisplayActivity.this, "Saved to gallery with name :: "+filename, Toast.LENGTH_SHORT).show();
+                }else{
+                    requestPermission();
+                }
             }
         });
 
@@ -65,13 +79,18 @@ public class ImageDisplayActivity extends AppCompatActivity {
         shareBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sharefile();
+                if (checkPermission()) {
+                    sharefile();
+                }else{
+                    requestPermission();
+                }
             }
         });
     }
 
 
     private String filesave(){
+
         final String folder_path = Environment.getExternalStorageDirectory().getAbsolutePath();
         final File dir = new File(folder_path + "/SecureQR");
         if(!dir.exists())
@@ -92,7 +111,6 @@ public class ImageDisplayActivity extends AppCompatActivity {
             bmpImage.compress(Bitmap.CompressFormat.PNG, 100, fOut);
             fOut.flush();
             fOut.close();
-            Toast.makeText(ImageDisplayActivity.this, "Saved to gallery with name :: "+filename, Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             e.printStackTrace();
             Log.d("datsun", "saveBtnListener: Could not save to gallery ::"+e);
@@ -117,6 +135,31 @@ public class ImageDisplayActivity extends AppCompatActivity {
         img.delete();
     }
 
+    private boolean checkPermission()
+    {
+        boolean status1 = ContextCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+        boolean status2 = ContextCompat.checkSelfPermission(this, READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+        if (status1 && status2 ) {
+            return true;
+        }else{
+            return false;
+        }
+    }
 
+    private void requestPermission()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(ImageDisplayActivity.this);
+        builder.setTitle("Need Permissions");
+        builder.setMessage("In order to save/share image, it is must that you give permission for Storage, one time.");
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+                ActivityCompat.requestPermissions(ImageDisplayActivity.this,new String[]{READ_EXTERNAL_STORAGE},  1 );
+                ActivityCompat.requestPermissions(ImageDisplayActivity.this,new String[]{WRITE_EXTERNAL_STORAGE},  1 );
+            }});
+        builder.create().show();
+
+    }
 
 }

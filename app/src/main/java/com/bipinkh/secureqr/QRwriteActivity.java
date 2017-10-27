@@ -58,6 +58,7 @@ public class QRwriteActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qrwrite);
+
         //buttons
         makeQRbtn = (Button) findViewById(R.id.makeQRbtn);
         messagebox = (EditText) findViewById(R.id.messagebox);
